@@ -1,0 +1,264 @@
+#!/bin/bash
+
+# // Exporting Language to UTF-8
+export LC_ALL='en_US.UTF-8'
+export LANG='en_US.UTF-8'
+export LANGUAGE='en_US.UTF-8'
+export LC_CTYPE='en_US.utf8'
+
+# // Export Banner Status Information
+export EROR="[ EROR ]"
+export INFO="[ INFO ]"
+export OKEY="[ OKEY ]"
+export PENDING="[ PENDING ]"
+export SEND="[ SEND ]"
+export RECEIVE="[ RECEIVE ]"
+
+# // Export Align
+export BOLD=""
+export WARNING=""
+export UNDERLINE=""
+
+# // Exporting URL Host
+export Server_URL="autosc.me/aio"
+export Server_Port="443"
+export Server_IP="underfined"
+export Script_Mode="Stable"
+export Auther="XdrgVPN"
+
+CHATID=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 3)
+KEY=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 2)
+export TIME="10"
+export URL="https://api.telegram.org/bot$KEY/sendMessage"
+
+WH=''
+
+clear
+nama=$(cat /etc/xray/username)
+IP=$(curl -sS ipv4.icanhazip.com)
+ISP=$(cat /etc/xray/isp)
+CITY=$(cat /etc/xray/city)
+domain=$(cat /etc/xray/domain)
+if [ ! -e /etc/xray/noobz/akun ]; then
+mkdir -p /etc/xray/noobz/akun
+fi
+function create(){
+clear
+echo -e "==================================================="
+echo -e "                 • SSH PANEL MENU •                "
+echo -e "==================================================="
+read -p "Username: " user
+read -p "Password: " pass
+read -p "Exp (0 for unlimited days):" exp
+read -p "IP LIMIT " ip
+
+if [ ! -e /etc/sfvpn/limit/noobs/ip/ ]; then
+  mkdir -p /etc/sfvpn/limit/noobs/ip/
+fi
+echo "$ip" > /etc/sfvpn/limit/noobs/ip/$user
+
+noobzvpns --add-user $user $pass --expired-user $user $exp
+echo -e "### $user $pass $exp" >> /etc/xray/noob
+
+
+clear
+
+echo -e "==================================="
+echo -e "          NOOBZVPN'S ACCOUNT       "
+echo -e "==================================="
+echo -e "DOMAIN : $( cat /etc/xray/domain )"
+echo -e "USERNAME: $user"
+echo -e "PASSWORD: $pass"
+echo -e "IP LIMIT: $ip"
+echo -e "EXP DAYS: $exp DAYS"
+echo -e "tcp_std port:  8880"
+echo -e "tcp_ssl port: 8443"
+echo -e "==================================="
+echo -e "Example config TCP_STD 8880"
+echo -e "==================================="
+echo -e "EJ/AhFFMP73OIMvFG+nQUlel8kRYqOqu1FaMMv7NcCEZoadYxA+eSrhVt/ds+DzKWoepCJaiR497IFCCULAwbiRqDUXW/HX+pOgyy+fBOqaheKI1AQg1xd6yxdi85QuI1HjKW54T6hmJlU5EZrs/vS4sOElDtk1xSsrKGiGjWkJiYJp0mUYrx4sjNNcaigiv+cHo/1U17NKb3La57i56Gp/ecwpCaLXznFAjZ9T2Jv0CpTy9ec65E2/G68XS8HDb76fUZSeG5lVcIZpvW6kTnDLa0ZyPZsDYPn3MEwSQa/ikVOS7hiH6tx9duscX+l6oRXplyt9gMbeTbFT/7h+vf37U9m0cCpwQ28ecr8o5Izpiu83AiEOlDWHdD+c9UaJYdyt/Qc+3O3r8Fdm+1pnHChNrJWtMDcjVj9QxEGrFpB4EVwGkw37dQNExWLDf/3T0fLdXsfXWOYl5NoUInUoW7LpV/k1Vla1X1UJlRq7xh+LXLZULtOBr28Zdvy4gRhw2Cfyr+SqQy1ar1hLUp6N36L1PGL5c+lU31tMoHTGWYoJfKURG4c+vAQKZcbDYng7cQd72koWNgr3HL1o+Oe5Cw2A13Gpe34slJe+kaQ=="
+echo -e "==================================="
+echo -e "Example config TCP_SSL 8443"
+echo -e "==================================="
+echo -e "EBhwciUn7LMldMx+33uNv+Un6XUmbBz9VrWRZPF3iTB4OqLHlZOzH/Ua/4ZImKBFUx/bvvZhwd3XjTc2gr0NMAiSRKk+PV+aUbCr5KsFhqh/KmQpr1tjRK5hxPWDeBWoK7SYaVzC9Q53O1wscaMSS/TR1lrkdBlmmcgQxQo3MJxwz4FHGYbsYDK6axIvSRHyDA9yv0b6ns+oHz3PU6pyzdpfLfZ052g2KWb7EwnyscdP1YaKfngPyHe1D6zkHPe+BGq4PoHoj8ED5rIuxasJ9tsV3MPVJWAEpCYQdZw9XCxE0n76cQktDnhVLr4cVPE6Jch6z9hBhfVDLMDrIs6aHxndokW1wo0t9B9BtHxC2mFWR3KMyz3w6f4vm6CowMa68XE8BcqanD+RXCVhuTkn7jsay+EkLVZe28zWUupdPhRU9mkZFqNjUbsWUmd6fuviEEBfzxt48d2sTn/Db9GtSsH0UUDBTE9Q8T+Jlfkt4rF9qSGRDL1FPq7C7B3eVQWlkz8Z4wkVUnwJSi03Xuzg3j67sxmmVrcXLl9sHBF8VUUrhI8/7I0vY3CcFH8iyheWF4bw1zgZDQIxRMNuYREUQmbH"
+echo -e "==================================="
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+
+
+function delete(){
+clear
+echo -e "==================================================="
+echo -e "                 • DELETE NOOBZ •                  "
+echo -e "==================================================="
+grep -E "^### " "/etc/xray/noob" | cut -d ' ' -f 2-3 | nl -s ') '
+read -p "username :" user
+noobzvpns --remove-user $user
+expi=`date -d "$exp days" +"%Y-%m-%d"`
+clear
+echo -e "==================================================="
+echo -e "                 • DELETE NOOBZ •                  "
+echo -e "==================================================="
+echo -e ""
+echo -e " USERNAME $user HAS BEEN DELETE "
+echo -e " EXPIRED : $expi "
+echo -e ""
+TEXT="
+<code>◇━━━━━━━━━━━━━━◇</code>
+<code>  DELETE NOOBZVPNS</code>
+<code>◇━━━━━━━━━━━━━━◇</code>
+<code>DOMAIN   :</code> <code>${domain} </code>
+<code>ISP      :</code> <code>$ISP $CITY </code>
+<code>USERNAME :</code> <code>$user</code>
+<code>EXPIRED  :</code> <code>$expi </code>
+<code>◇━━━━━━━━━━━━━━◇</code>
+<i>Succes Delete This User...</i>
+"
+curl -s --max-time $TIMES -d "chat_id=$CHATIDNEW&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
+cd
+if [ ! -e /etc/tele ]; then
+echo -ne
+else
+echo "$TEXT" > /etc/notiftele
+bash /etc/tele
+fi
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+
+
+function renew(){
+clear
+echo -e "==================================================="
+echo -e "                 • RENEW NOOBZ •                   "
+echo -e "==================================================="
+read -p "username: " user
+read -p "expired?: " exp
+noobzvpns --renew-user $user --expired-user $user $exp
+clear
+echo -e "==================================================="
+echo -e "                 • RENEW NOOBZ •                   "
+echo -e "==================================================="
+echo "USERNAME: $user"
+echo "renew success!!"
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+
+
+
+
+function lock(){
+clear
+echo -e "==================================================="
+echo -e "                • LOCK  NOOBZ •                    "
+echo -e "==================================================="
+read -p "username: " user
+noobzvpns --block-user $user
+clear
+echo -e "==================================================="
+echo -e "                • LOCK  NOOBZ •                    "
+echo -e "==================================================="
+echo "USERNAME: $user"
+echo "locked success!!"
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+
+
+
+
+
+
+function show(){
+
+clear
+echo -e "==================================================="
+echo -e "                • MEMBER  NOOBZ •                  "
+echo -e "==================================================="
+noobzvpns --info-all-user | awk '/^\s*\+.*-> active/ {gsub(/(issued\(yyyymmdd\)|hash_key): [0-9a-f]+/, ""); print; getline; print; getline; getline; getline; print; print "═══════════════════"}'
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+
+function unlock(){
+clear
+echo -e "==================================================="
+echo -e "                • UNLOCK  NOOBZ •                  "
+echo -e "==================================================="
+read -p "username: " user
+noobzvpns --unblock-user $user
+clear
+echo -e "==================================================="
+echo -e "                • UNLOCK  NOOBZ •                  "
+echo -e "==================================================="
+echo "USERNAME: $user"
+echo "unlocked success!!"
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+
+
+
+function remove(){
+clear
+echo -e "==================================================="
+echo -e "               • REMOVE  NOOBZ •                   "
+echo -e "==================================================="
+
+read -p "Apakah Anda ingin menghapus semua user? (Y/N): " choice
+
+if [ "$choice" == "Y" ] || [ "$choice" == "y" ]; then
+    # Eksekusi perintah di sini
+    echo "MENGHAPUS SEMUA USER!"
+noobzvpns --remove-all-user
+elif [ "$choice" == "N" ] || [ "$choice" == "n" ]; then
+    echo "Membatalkan penghapusan."
+menu-noobzvpns
+else
+    echo "Pilihan tidak valid."
+fi
+
+clear
+echo -e "==================================================="
+echo -e "               • REMOVE  NOOBZ •                   "
+echo -e "==================================================="
+echo "USERNAME: $user"
+echo "unlocked success!!"
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
+}
+
+
+
+
+clear
+echo -e "==================================================="
+echo -e "                • NOOBZ PANEL MENU •               "
+echo -e "==================================================="
+echo -e "  [01] • ADD AKUN        [04] • DELETE USER        "
+echo -e "  [02] • SHOW AKUN       [05] • LOCKED USER        "
+echo -e "  [03] • RENEW AKUN      [06] • UNLOCKED USER      "
+echo -e "  [00] • GO BACK         [07] • REMOVE ALL USER    "
+echo -e "==================================================="
+echo -e ""
+echo -ne " Select menu : "; read opt
+case $opt in
+01 | 1) clear ; create ;;
+02 | 2) clear ; show ;;
+03 | 3) clear ; renew ;;
+04 | 4) clear ; delete ;;
+05 | 5) clear ; lock ;;
+06 | 6) clear ; unlock ;;
+07 | 7) clear ; remove ;;
+100) clear ; $up2u ;;
+00 | 0) clear ; menu ;;
+*) clear ; menu ;;
+esac

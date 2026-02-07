@@ -1,0 +1,4 @@
+REPO="https://raw.githubusercontent.com/dudul19/tomatosc/main/"
+
+wget -q -O /etc/default/dropbear "${REPO}Cfg/dropbear.conf"
+chmod +x /etc/default/dropbear
