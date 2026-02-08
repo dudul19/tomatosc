@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MYIP=$(wget -qO- icanhazip.com);
-apt install jq curl -y
+apt install jq curl -y >/dev/null 2>&1
 clear
 echo -e "☉———————————————————————————————————☉"
 echo -e "          • POINTING DOMAIN •         "

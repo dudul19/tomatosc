@@ -1,31 +1,44 @@
 #!/bin/bash
 
-# moon loading
+# loading moon
 function loading_moon() {
     local pid=$1
     local delay=0.1
     local moons=("🌑" "🌒" "🌓" "🌔" "🌕" "🌖" "🌗" "🌘")
     local i=0
-
     tput civis
-
     while ps -p "$pid" > /dev/null; do
-        printf "\r%s" "${moons[i]}"
+        printf "\r  Loading... : %s" "${moons[i]}"
         i=$(( (i + 1) % 8 ))
         sleep $delay
     done
-
     tput cnorm
     printf "\r   \r"
 }
 
-# Update Sistem
-apt upgrade -y
-apt update -y
-apt install -y
-apt install curl -y 
-apt install wondershaper -y
-apt install neofetch -y
+# exe loading
+loading_exe() {
+    eval "$@" > /dev/null 2>&1 &
+    local pid=$!
+    loading_moon $pid
+}
+
+function update_upgrade() {
+    apt upgrade -y
+    apt update -y
+    apt install -y
+    apt install curl -y 
+    apt install wondershaper -y
+    apt install neofetch -y
+}
+clear
+echo "☉—————————————————————————————————————————————☉"
+echo "    Tomato Autoscript By t.me/dudulrealnofek    "
+echo "☉—————————————————————————————————————————————☉"
+echo ""
+echo "  Checking   : Environtment & Server"
+loading_exe "update_upgrade"
+clear 
 
 # Variabel Data
 TIME=$(date '+%d %b %Y')
@@ -41,7 +54,6 @@ clear
 export IP=$(curl -sS icanhazip.com)
 clear
 
-# Banner Welcome
 echo "☉———————————————————————————————————————————————————————☉"
 echo "       • WELCOME TO TOMATO AUTOSCRIPT INSTALLER •         "
 echo "☉———————————————————————————————————————————————————————☉"
@@ -119,11 +131,6 @@ fi
 
 # Inisialisasi IP
 MYIP=$(curl -sS ipv4.icanhazip.com)
-echo "loading..."
-clear
-MYIP=$(curl -sS ipv4.icanhazip.com)
-echo "loading..."
-clear
 clear
 rm -f /usr/bin/user
 
@@ -158,7 +165,6 @@ else
     sts="${Error}"
 fi
 
-echo "loading..."
 clear
 start=$(date +%s)
 
@@ -170,22 +176,8 @@ secs_to_human() {
 function print_ok() {
     echo "[ OK ] $1"
 }
-function print_install() {
-    echo "=================================================="
-    echo " Installing $1 "
-    echo "=================================================="
-    sleep 1
-}
 function print_error() {
     echo "[ ERROR ] $1"
-}
-function print_success() {
-    if [[ 0 -eq $? ]]; then
-        echo "=================================================="
-        echo " $1 Installed "
-        echo "=================================================="
-        sleep 2
-    fi
 }
 
 function is_root() {
@@ -226,15 +218,6 @@ export IP=$(curl -s https://ipinfo.io/ip/)
 
 # --- Core Functions ---
 function first_setup() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 4%"
-    echo "  Step 1/23  : Setup Timezone & Haproxy"
-    echo "  Loading... : $loading_moon $!"
-    {
     timedatectl set-timezone Asia/Jakarta
     echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
@@ -257,20 +240,10 @@ function first_setup() {
         echo " Your OS Is Not Supported ($(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g'))"
         exit 1
     fi
-    print_success "Timezone & Haproxy"
     clear
-    } >/dev/null 2>&1
 }
 
 function nginx_install() {
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 8%"
-    echo "  Step 2/23  : Setup Nginx"
-    echo "  Loading... : $loading_moon $!"
-    {
     if [[ $(cat /etc/os-release | grep -w ID | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/ID//g') == "ubuntu" ]]; then
         print_install "Setup nginx For OS Is $(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')"
         sudo apt-get install nginx -y
@@ -280,21 +253,9 @@ function nginx_install() {
     else
         echo " Your OS Is Not Supported ( $(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g') )"
     fi
-    clear
-    }
 }
 
 function base_package() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 12%"
-    echo "  Step 3/23  : Setup Base Packages"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Base Packages"
     apt install at -y
     apt install zip pwgen openssl netcat socat cron bash-completion -y
     apt install figlet -y
@@ -319,9 +280,7 @@ function base_package() {
     echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
     sudo apt-get install -y speedtest-cli vnstat libnss3-dev libnspr4-dev pkg-config libpam0g-dev libcap-ng-dev libcap-ng-utils libselinux1-dev libcurl4-nss-dev flex bison make libnss3-tools libevent-dev bc rsyslog dos2unix zlib1g-dev libssl-dev libsqlite3-dev sed dirmngr libxml-parser-perl build-essential gcc g++ python htop lsof tar wget curl ruby zip unzip p7zip-full python3-pip libc6 util-linux build-essential msmtp-mta ca-certificates bsd-mailx iptables iptables-persistent netfilter-persistent net-tools openssl ca-certificates gnupg gnupg2 ca-certificates lsb-release gcc shc make cmake git screen socat xz-utils apt-transport-https gnupg1 dnsutils cron bash-completion ntpdate chrony jq openvpn easy-rsa
-    print_success "Base Packages"
     clear
-    } >/dev/null 2>&1
 }
 
 function pasang_domain() {
@@ -363,16 +322,6 @@ function pasang_domain() {
 }
 
 function ins_restart() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 78%"
-    echo "  Step 19/24 : Setup Restart Service"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Restarting Packages"
     /etc/init.d/nginx restart
     /etc/init.d/openvpn restart
     /etc/init.d/ssh restart
@@ -401,21 +350,10 @@ function ins_restart() {
     rm -f /root/openvpn
     rm -f /root/key.pem
     rm -f /root/cert.pem
-    print_success "Restarting Packages"
     clear
-    } >/dev/null 2>&1
 }
 
-function restart_system() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 100%"
-    echo "  Step 23/23 : Restarting System"
-    echo "  Loading... : $loading_moon $!"
-    {     
+function restart_system() {   
     USRSC=$(wget -qO- ${LICENSE} | grep $ipsaya | awk '{print $2}')
     EXPSC=$(wget -qO- ${LICENSE} | grep $ipsaya | awk '{print $3}')
     TIMEZONE=$(printf '%(%H:%M:%S)T')
@@ -434,20 +372,9 @@ Expired : $EXPSC
 "'&reply_markup={"inline_keyboard":[{"text":"Developer","url":"https://t.me/dudulrealnofek"}]}'
     curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
     clear
-    } >/dev/null 2>&1
 }
 
 function pasang_ssl() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 20%"
-    echo "  Step 5/23  : Setup SSL For Domain"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "SSL on Domain"
     rm -rf /etc/xray/xray.key
     rm -rf /etc/xray/xray.crt
     domain=$(cat /root/domain)
@@ -463,22 +390,10 @@ function pasang_ssl() {
     /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
     ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
     chmod 777 /etc/xray/xray.key
-    print_success "SSL on Domain"
     clear
-    } >/dev/null 2>&1
 }
 
 function make_folder_xray() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 16%"
-    echo "  Step 4/23  : Setup Xray Folder"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Xray Directory"
     rm -rf /etc/vmess/.vmess.db
     rm -rf /etc/vless/.vless.db
     rm -rf /etc/trojan/.trojan.db
@@ -518,22 +433,10 @@ function make_folder_xray() {
     echo "& plughin Account" >>/etc/trojan/.trojan.db
     echo "& plughin Account" >>/etc/shadowsocks/.shadowsocks.db
     echo "& plughin Account" >>/etc/ssh/.ssh.db
-    print_success "Xray Directory"
     clear
-    } >/dev/null 2>&1
 }
 
 function install_xray() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 24%"
-    echo "  Step 6/23  : Setup Xray Core Stable"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Xray Core Stable"
     domainSock_dir="/run/xray"
     ! [ -d $domainSock_dir ] && mkdir $domainSock_dir
     chown www-data.www-data $domainSock_dir
@@ -570,22 +473,10 @@ filesNOFILE=1000000
 [Install]
 WantedBy=multi-user.target
 EOF
-    print_success "Xray Core Stable"
     clear
-    } >/dev/null 2>&1
 }
 
 function ssh() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 28%"
-    echo "  Step 7/23  : Setup SSH Password"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "SSH Password"
     wget -O /etc/pam.d/common-password "${REPO}Fls/password"
     chmod +x /etc/pam.d/common-password
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure keyboard-configuration
@@ -634,20 +525,9 @@ END
     sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
     print_success "SSH Password"
     clear
-    } >/dev/null 2>&1
 }
 
 function udp_mini() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 32%"
-    echo "  Step 8/23  : Setup Quota Limitter"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Quota Limiter"
     wget ${REPO}Fls/limit.sh && chmod +x limit.sh && ./limit.sh
     cd
     wget -q -O /usr/bin/limit-ip "${REPO}Fls/limit-ip"
@@ -716,84 +596,35 @@ EOF
     systemctl stop udp-mini-3
     systemctl enable udp-mini-3
     systemctl start udp-mini-3
-    print_success "Quota Limiter"
     clear
-    } >/dev/null 2>&1
 }
 
 function ssh_slow() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 36%"
-    echo "  Step 9/23  : Setup Slow DNS"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "SlowDNS"
     wget -q -O /tmp/nameserver "${REPO}Fls/nameserver" >/dev/null 2>&1
     chmod +x /tmp/nameserver
     bash /tmp/nameserver | tee /root/install.log
-    print_success "SlowDNS"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_SSHD() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 40%"
-    echo "  Step 10/23 : Setup Slow DNS"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "SSHD"
     wget -q -O /etc/ssh/sshd_config "${REPO}Fls/sshd" >/dev/null 2>&1
     chmod 700 /etc/ssh/sshd_config
     /etc/init.d/ssh restart
     systemctl restart ssh
     /etc/init.d/ssh status
-    print_success "SSHD"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_dropbear() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 44%"
-    echo "  Step 11/23 : Setup Dropbear"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Dropbear"
     apt-get install dropbear -y >/dev/null 2>&1
     wget -q -O /etc/default/dropbear "${REPO}Cfg/dropbear.conf"
     chmod +x /etc/default/dropbear
     /etc/init.d/dropbear restart
     /etc/init.d/dropbear status
-    print_success "Dropbear"
     clear
-    } >/dev/null 2>&1
 }
 
-
 function ins_vnstat() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 48%"
-    echo "  Step 12/23 : Setup Vnstat Monitoring"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Vnstat"
     apt -y install vnstat >/dev/null 2>&1
     /etc/init.d/vnstat restart
     apt -y install libsqlite3-dev >/dev/null 2>&1
@@ -810,40 +641,16 @@ function ins_vnstat() {
     /etc/init.d/vnstat status
     rm -f /root/vnstat-2.6.tar.gz
     rm -rf /root/vnstat-2.6
-    print_success "Vnstat"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_openvpn() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 52%"
-    echo "  Step 13/23 : Setup Open VPN"
-    echo "  Loading... : $loading_moon $!"
-    {    
-    print_install "OpenVPN"
     wget ${REPO}Fls/openvpn && chmod +x openvpn && ./openvpn
     /etc/init.d/openvpn restart
-    print_success "OpenVPN"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_backup() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 56%"
-    echo "  Step 14/23 : Setup Backup & Restore"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Backup Server"
     apt install rclone -y
     printf "q\n" | rclone config
     wget -O /root/.config/rclone/rclone.conf "${REPO}Cfg/rclone.conf"
@@ -871,22 +678,10 @@ logfile ~/.msmtp.log
 EOF
     chown -R www-data:www-data /etc/msmtprc
     wget -q -O /etc/ipserver "${REPO}Fls/ipserver" && bash /etc/ipserver
-    print_success "Backup Server"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_swab() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 60%"
-    echo "  Step 15/23 : Setup Swab Storage"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Swap"
     gotop_latest="$(curl -s https://api.github.com/repos/xxxserxxx/gotop/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
     gotop_link="https://github.com/xxxserxxx/gotop/releases/download/v$gotop_latest/gotop_v"$gotop_latest"_linux_amd64.deb"
     curl -sL "$gotop_link" -o /tmp/gotop.deb
@@ -901,22 +696,10 @@ function ins_swab() {
     chronyc sourcestats -v
     chronyc tracking -v
     wget ${REPO}Fls/bbr.sh && chmod +x bbr.sh && ./bbr.sh
-    print_success "Swap"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_Fail2ban() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 64%"
-    echo "  Step 16/23 : Setup Fail2ban"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Fail2ban"
     if [ -d '/usr/local/ddos' ]; then
         echo
         echo
@@ -929,22 +712,10 @@ function ins_Fail2ban() {
     echo "Banner /etc/banner.txt" >>/etc/ssh/sshd_config
     sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/banner.txt"@g' /etc/default/dropbear
     wget -O /etc/banner.txt "${REPO}Bnr/issue.net"
-    print_success "Fail2ban"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_epro() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 72%"
-    echo "  Step 18/23 : Setup ePro Websocket Proxy"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "ePro WebSocket Proxy"
     wget -O /usr/bin/ws "${REPO}Fls/ws" >/dev/null 2>&1
     wget -O /usr/bin/tun.conf "${REPO}Cfg/tun.conf" >/dev/null 2>&1
     wget -O /etc/systemd/system/ws.service "${REPO}Fls/ws.service" >/dev/null 2>&1
@@ -980,40 +751,18 @@ function ins_epro() {
     apt autoremove -y >/dev/null 2>&1
     echo "change to time GMT+7"
     ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-    print_success "ePro WebSocket Proxy"
     clear
-    } >/dev/null 2>&1
 }
 
 function ins_zivpn(){
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 68%"
-    echo "  Step 17/23 : Setup UDP ZiVPN"
-    echo "  Loading... : $loading_moon $!"
-    {
     wget -q ${REPO}Fls/zivpn
     chmod +x zivpn
     ./zivpn
     systemctl status zivpn
     clear
-    } >/dev/null 2>&1
 }
 
 function menu() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 84%"
-    echo "  Step 20/23 : Setup Menu Packages"
-    echo "  Loading... : $loading_moon $!"
-    {
-    print_install "Menu Packages"
     wget ${REPO}Cdy/menu.zip
     wget -q -O /usr/bin/enc "${REPO}Enc/encrypt"
     chmod +x /usr/bin/enc
@@ -1031,22 +780,10 @@ function menu() {
     cp m-noobz /usr/local/sbin
     rm m-noobz*
     chmod +x /usr/local/sbin/m-noobz
-    print_success "Menu Packages"
     clear
-    } >/dev/null 2>&1
 }
 
 function profile() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 90%"
-    echo "  Step 21/23 : Setup Profile"
-    echo "  Loading... : $loading_moon $!"
-    {    
-    print_install "Profiles"
     cat >/root/.profile <<EOF
 if [ "$BASH" ]; then
 if [ -f ~/.bashrc ]; then
@@ -1122,22 +859,10 @@ EOF
     else
         TIME_DATE="AM"
     fi
-    print_success "Profiles"
     clear
-    } >/dev/null 2>&1
 }
 
 function enable_services() {
-    clear
-    echo "☉—————————————————————————————————————————————☉"
-    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
-    echo "☉—————————————————————————————————————————————☉"
-    echo ""
-    echo "  Progress   : 94%"
-    echo "  Step 22/23 : Setup Enable Services"
-    echo "  Loading... : $loading_moon $!"
-    {        
-    print_install "Enable Service"
     systemctl daemon-reload
     systemctl start netfilter-persistent
     systemctl enable --now rc-local
@@ -1147,37 +872,181 @@ function enable_services() {
     systemctl restart xray
     systemctl restart cron
     systemctl restart haproxy
-    print_success "Enable Service"
+    systemctl restart zivpn
     clear
-    } >/dev/null 2>&1
+}
+
+# loading banner
+function task_banner() {
+    clear
+    echo "☉—————————————————————————————————————————————☉"
+    echo "    Tomato Autoscript By t.me/dudulrealnofek    "
+    echo "☉—————————————————————————————————————————————☉"
+    echo ""
+}
+function task_1() {
+    task_banner
+    echo "  Progress   : 4%"
+    echo "  Step 1/23  : Setup Timezone & Haproxy"
+    loading_exe "first_setup"  
+}
+function task_2() {
+    task_banner
+    echo "  Progress   : 8%"
+    echo "  Step 2/23  : Setup Nginx"
+    loading_exe "nginx_install"   
+}
+function task_3() {
+    task_banner
+    echo "  Progress   : 12%"
+    echo "  Step 3/23  : Setup Base Packages"  
+    loading_exe "base_package" 
+}
+function task_4() {
+    task_banner
+    echo "  Progress   : 16%"
+    echo "  Step 4/23  : Setup Xray Folder" 
+    loading_exe "make_folder_xray" 
+}
+function task_5() {
+    task_banner
+    echo "  Progress   : 20%"
+    echo "  Step 5/23  : Setup SSL For Domain" 
+    loading_exe "pasang_ssl" 
+}
+function task_6() {
+    task_banner
+    echo "  Progress   : 24%"
+    echo "  Step 6/23  : Setup Xray Core Stable"
+    loading_exe "install_xray" 
+}
+function task_7() {
+    task_banner
+    echo "  Progress   : 28%"
+    echo "  Step 7/23  : Setup SSH Password"
+    loading_exe "ssh" 
+}
+function task_8() {
+    task_banner
+    echo "  Progress   : 32%"
+    echo "  Step 8/23  : Setup Quota Limitter"
+    loading_exe "udp_mini" 
+}
+function task_9() {
+    task_banner
+    echo "  Progress   : 36%"
+    echo "  Step 9/23  : Setup Slow DNS"
+    loading_exe "ssh_slow" 
+}
+function task_10() {
+    task_banner
+    echo "  Progress   : 40%"
+    echo "  Step 10/23 : Setup SSHD Configuration"
+    loading_exe "ins_SSHD" 
+}
+function task_11() {
+    task_banner
+    echo "  Progress   : 44%"
+    echo "  Step 11/23 : Setup Dropbear"
+    loading_exe "ins_dropbear" 
+}
+function task_12() {
+    task_banner
+    echo "  Progress   : 48%"
+    echo "  Step 12/23 : Setup Vnstat Monitoring"
+    loading_exe "ins_vnstat" 
+}
+function task_13() {
+    task_banner
+    echo "  Progress   : 52%"
+    echo "  Step 13/23 : Setup Open VPN"
+    loading_exe "ins_openvpn" 
+}
+function task_14() {
+    task_banner
+    echo "  Progress   : 56%"
+    echo "  Step 14/23 : Setup Backup & Restore"
+    loading_exe "ins_backup" 
+}
+function task_15() {
+    task_banner
+    echo "  Progress   : 60%"
+    echo "  Step 15/23 : Setup Swab Storage"
+    loading_exe "ins_swab" 
+}
+function task_16() {
+    task_banner
+    echo "  Progress   : 64%"
+    echo "  Step 16/23 : Setup Fail2ban"
+    loading_exe "ins_Fail2ban" 
+}
+function task_17() {
+    task_banner
+    echo "  Progress   : 68%"
+    echo "  Step 17/23 : Setup UDP ZiVPN"
+    loading_exe "ins_zivpn" 
+}
+function task_18() {
+    task_banner
+    echo "  Progress   : 72%"
+    echo "  Step 18/23 : Setup ePro Websocket Proxy"
+    loading_exe "ins_epro" 
+}
+function task_19() {
+    task_banner
+    echo "  Progress   : 78%"
+    echo "  Step 19/24 : Setup Restart Service"
+    loading_exe "ins_restart" 
+}
+function task_20() {
+    task_banner
+    echo "  Progress   : 84%"
+    echo "  Step 20/23 : Setup Menu Packages"
+    loading_exe "menu" 
+}
+function task_21() {
+    task_banner
+    echo "  Progress   : 90%"
+    echo "  Step 21/23 : Setup Profile"
+    loading_exe "profile" 
+}
+function task_22() {
+    task_banner
+    echo "  Progress   : 94%"
+    echo "  Step 22/23 : Setup Enable Services"
+    loading_exe "enable_services" 
+}
+function task_23() {
+    task_banner
+    echo "  Progress   : 100%"
+    echo "  Step 23/23 : Restarting System"
+    loading_exe "restart_system" 
 }
 
 function instal() {
-    clear
-    first_setup
-    nginx_install
-    base_package
-    make_folder_xray
-    pasang_domain
-    pasang_ssl
-    install_xray
-    ssh
-    udp_mini
-    ssh_slow
-    ins_SSHD
-    ins_dropbear
-    ins_vnstat
-    ins_openvpn
-    ins_backup
-    ins_swab
-    ins_Fail2ban
-    ins_zivpn
-    ins_epro
-    ins_restart
-    menu
-    profile
-    enable_services
-    restart_system
+    task_1
+    task_2
+    task_3
+    task_4
+    task_5
+    task_6
+    task_7
+    task_8
+    task_9
+    task_10
+    task_11 
+    task_12
+    task_13
+    task_14
+    task_15
+    task_16
+    task_17
+    task_18
+    task_19
+    task_20
+    task_21
+    task_22
+    task_23
 }
 
 instal
