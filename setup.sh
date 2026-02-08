@@ -30,6 +30,7 @@ function update_upgrade() {
     apt install curl -y 
     apt install wondershaper -y
     apt install neofetch -y
+    apt install jq curl -y
 }
 clear
 echo "☉—————————————————————————————————————————————☉"
@@ -59,7 +60,7 @@ echo "       • WELCOME TO TOMATO AUTOSCRIPT INSTALLER •         "
 echo "☉———————————————————————————————————————————————————————☉"
 echo "       This script will install a VPN on your server      "
 echo " SSH | Vmess | Vless | Trojan | Noobz | SlowDNS | OpenVPN "
-echo "             Installer Version: v.1.0 - LTS               "
+echo "        Installer Version: Tomat Merah 1.0 - LTS          "
 echo "             Developer: t.me/dudulrealnofek               "
 echo "☉———————————————————————————————————————————————————————☉"
 echo "                 • SYSTEM INFORMATION •                   "
@@ -313,10 +314,9 @@ function pasang_domain() {
         wget ${REPO}Fls/cf.sh && chmod +x cf.sh >/dev/null 2>&1
         ./cf.sh 
         rm -f /root/cf.sh
-        clear
     else
-        print_install "Random Subdomain/Domain is Used"
-        clear
+        print_install "Random Subdomain is Used"
+        pasang_domain
     fi
     clear
 }
@@ -1028,6 +1028,7 @@ function instal() {
     task_2
     task_3
     task_4
+    pasang_domain
     task_5
     task_6
     task_7

@@ -1,8 +1,6 @@
 #!/bin/bash
 
-MYIP=$(wget -qO- icanhazip.com);
-apt install jq curl -y >/dev/null 2>&1
-clear
+echo ""
 echo -e "☉———————————————————————————————————☉"
 echo -e "          • POINTING DOMAIN •         "
 echo -e "☉———————————————————————————————————☉"
@@ -18,7 +16,6 @@ CF_KEY=2643e6e6ee9afb73bdc4f4d8742da31938c1c
 CF_ID=akmalcoeg19@gmail.com
 set -euo pipefail
 IP=$(wget -qO- icanhazip.com);
-echo "Updating DNS for ${dns}..."
 ZONE=$(curl -sLX GET "https://api.cloudflare.com/client/v4/zones?name=${DOMAIN}&status=active" \
      -H "X-Auth-Email: ${CF_ID}" \
      -H "X-Auth-Key: ${CF_KEY}" \
@@ -49,3 +46,4 @@ echo "$dns" > /etc/v2ray/domain
 echo "$dns" > /etc/xray/scdomain
 echo "IP=$dns" > /var/lib/kyt/ipvps.conf
 cd
+clear
