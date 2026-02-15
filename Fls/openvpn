@@ -1,9 +1,11 @@
 #!/bin/bash
+
 export DEBIAN_FRONTEND=noninteractive
 OS=`uname -m`;
 MYIP=$(wget -qO- ipinfo.io/ip);
 domain=$(cat /root/domain)
 MYIP2="s/xxxxxxxxx/$domain/g";
+
 function ovpn_install() {
 rm -rf /etc/openvpn
 mkdir -p /etc/openvpn
@@ -12,6 +14,7 @@ unzip -d /etc/openvpn/ /etc/openvpn/vpn.zip
 rm -f /etc/openvpn/vpn.zip
 chown -R root:root /etc/openvpn/server/easy-rsa/
 }
+
 function config_easy() {
 cd
 mkdir -p /usr/lib/openvpn/
@@ -21,6 +24,7 @@ systemctl enable --now openvpn-server@server-tcp
 systemctl enable --now openvpn-server@server-udp
 /etc/init.d/openvpn restart
 }
+
 function make_follow() {
 echo 1 > /proc/sys/net/ipv4/ip_forward
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
@@ -85,6 +89,7 @@ verb 3
 END
 sed -i $MYIP2 /etc/openvpn/ssl.ovpn;
 }
+
 function cert_ovpn() {
 echo '<ca>' >> /etc/openvpn/tcp.ovpn
 cat /etc/openvpn/server/ca.crt >> /etc/openvpn/tcp.ovpn
@@ -117,6 +122,7 @@ cat <<'mySiteOvpn' > /var/www/html/index.html
 mySiteOvpn
 sed -i "s|IP-ADDRESSS|$(curl -sS ifconfig.me)|g" /var/www/html/index.html
 }
+
 function install_ovpn() {
 ovpn_install
 config_easy
@@ -127,4 +133,5 @@ systemctl enable openvpn
 systemctl start openvpn
 /etc/init.d/openvpn restart
 }
+
 install_ovpn

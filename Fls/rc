@@ -1,3 +1,2 @@
 REPO="https://raw.githubusercontent.com/dudul19/tomatosc/main/"
-
 wget -O /root/.config/rclone/rclone.conf "${REPO}Cfg/rclone.conf"

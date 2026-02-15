@@ -50,16 +50,14 @@ KEY="8217480105:AAGBhga3kOviy2Hfm2CnQhnvBP9FkYOjouo"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 REPO="https://raw.githubusercontent.com/dudul19/tomatosc/main/"
 LICENSE="https://raw.githubusercontent.com/dudul19/license/main/tomato"
-
-clear
 export IP=$(curl -sS icanhazip.com)
 clear
-
+echo ""
 echo "☉———————————————————————————————————————————————————————☉"
 echo "       • WELCOME TO TOMATO AUTOSCRIPT INSTALLER •         "
 echo "☉———————————————————————————————————————————————————————☉"
 echo "       This script will install a VPN on your server      "
-echo " SSH | Vmess | Vless | Trojan | Noobz | SlowDNS | OpenVPN "
+echo "  SSH | Vmess | Vless | Trojan | Noobz | ZIVPN | OpenVPN  "
 echo "        Installer Version: Tomat Merah 1.0 - LTS          "
 echo "             Developer: t.me/dudulrealnofek               "
 echo "☉———————————————————————————————————————————————————————☉"
@@ -92,9 +90,10 @@ else
 fi
 
 echo "☉————————————————————————————————————————————————————————☉"
-read -p "  Press [ Enter ] For Starting Installation "
+echo ""
+read -p "  Press [enter] to start installation "
 clear
-echo "  [ WAIT ] Checking User & License"
+echo "  Checking User & License"
 sleep 3
 
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
@@ -103,7 +102,7 @@ data_ip=${LICENSE}
 function checking_sc() {
   useexp=$(wget -qO- $data_ip | grep $ipsaya | awk '{print $3}')
   if [[ $date_list < $useexp ]]; then
-    echo -ne
+    echo -ne 
   else
     clear
     echo -e "☉————————————————————————————————————————————————————————☉"
@@ -304,7 +303,7 @@ function pasang_domain() {
         echo "         • CHANGES DOMAIN •           "
         echo "☉———————————————————————————————————☉"
         read -p "  Your Domain     : " host1
-        read -p "  Add Client Name : " nama
+        read -p "  Client Name     : " nama
         echo "IP=" >>/var/lib/kyt/ipvps.conf
         echo $host1 >/etc/xray/domain
         echo $host1 >/root/domain
@@ -354,23 +353,24 @@ function ins_restart() {
 }
 
 function restart_system() {   
-    USRSC=$(wget -qO- ${LICENSE} | grep $ipsaya | awk '{print $2}')
-    EXPSC=$(wget -qO- ${LICENSE} | grep $ipsaya | awk '{print $3}')
+    USRSC=$(wget -qO- "${LICENSE}" | grep -w "${ipsaya}" | awk '{print $2}')
+    EXPSC=$(wget -qO- "${LICENSE}" | grep -w "${ipsaya}" | awk '{print $3}')
     TIMEZONE=$(printf '%(%H:%M:%S)T')
     TEXT="
 ☉—————————————————☉
 • INSTALL SUCCESS •
 ☉—————————————————☉
-Client  : $USRSC
-Domain  : $domain
-Date    : $TIME
-Time    : $TIMEZONE
-IP VPS  : $ipsaya
-Expired : $EXPSC
+Client  : ${USRSC}
+Domain  : ${domain}
+Date    : ${TIME}
+Time    : ${TIMEZONE}
+IP VPS  : ${ipsaya}
+Expired : ${EXPSC}
 ☉—————————————————☉
  Tomato Autoscript
-"'&reply_markup={"inline_keyboard":[{"text":"Developer","url":"https://t.me/dudulrealnofek"}]}'
-    curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
+"'&reply_markup={"inline_keyboard":[[{"text":"Developer","url":"https://t.me/dudulrealnofek"}]]}'
+
+    curl -s --max-time "${TIMES}" -d "chat_id=${CHATID}&disable_web_page_preview=1&text=${TEXT}&parse_mode=html" "${URL}" >/dev/null
     clear
 }
 
@@ -523,7 +523,6 @@ END
     sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
     ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
     sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
-    print_success "SSH Password"
     clear
 }
 
@@ -701,8 +700,6 @@ function ins_swab() {
 
 function ins_Fail2ban() {
     if [ -d '/usr/local/ddos' ]; then
-        echo
-        echo
         echo "Please un-install the previous version first"
         exit 0
     else
@@ -711,7 +708,7 @@ function ins_Fail2ban() {
     clear
     echo "Banner /etc/banner.txt" >>/etc/ssh/sshd_config
     sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/banner.txt"@g' /etc/default/dropbear
-    wget -O /etc/banner.txt "${REPO}Bnr/issue.net"
+    wget -O /etc/banner.txt "${REPO}Bnr/banner.txt"
     clear
 }
 
@@ -754,11 +751,29 @@ function ins_epro() {
     clear
 }
 
+function ins_noobz() {
+    cd  
+    git clone https://github.com/rifstore/noobzvpn.git
+    cd noobzvpn/
+    chmod +x install.sh
+    ./install.sh
+    echo start service noobzvpns
+    systemctl start noobzvpns &>/dev/null
+    echo enable service noobzvpns
+    systemctl enable noobzvpns &>/dev/null
+    clear
+}
+
 function ins_zivpn(){
     wget -q ${REPO}Fls/zivpn
     chmod +x zivpn
     ./zivpn
-    systemctl status zivpn
+    git clone https://github.com/rifstore/noobzvpn.git
+    cd noobzvpn/
+    chmod +x install.sh
+    ./install.sh
+    systemctl start noobzvpns &>/dev/null
+    systemctl enable noobzvpns &>/dev/null
     clear
 }
 
@@ -983,7 +998,7 @@ function task_16() {
 function task_17() {
     task_banner
     echo "  Progress   : 68%"
-    echo "  Step 17/23 : Setup UDP ZiVPN"
+    echo "  Step 17/23 : Setup UDP ZiVPN & Noobz"
     loading_exe "ins_zivpn" 
 }
 function task_18() {

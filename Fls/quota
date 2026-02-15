@@ -6,12 +6,12 @@ KEY="6751589620:AAHwjP6dzZhuqeyUOdYFc6742Q1YUVF1EjM"
 TIME="10"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 TEXT="
-<code>────────────────────</code>
+<code>☉—————————————————☉</code>
 <b>⚠️NOTIF QUOTA HABIS⚠️</b>
-<code>────────────────────</code>
+<code>☉—————————————————☉</code>
 <code>Username  : </code><code>$user</code>
 <code>Usage     : </code><code>$total</code>
-<code>────────────────────</code>
+<code>☉—————————————————☉</code>
 "
 curl -s --max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 }
