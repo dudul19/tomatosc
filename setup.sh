@@ -31,6 +31,7 @@ function update_upgrade() {
     apt install wondershaper -y
     apt install neofetch -y
     apt install jq curl -y
+    apt install lolcat -y
 }
 clear
 echo "☉—————————————————————————————————————————————☉"
@@ -352,7 +353,8 @@ function ins_restart() {
     clear
 }
 
-function restart_system() {   
+function restart_system() {
+    domains=$(cat /etc/xray/domain)   
     USRSC=$(wget -qO- "${LICENSE}" | grep -w "${ipsaya}" | awk '{print $2}')
     EXPSC=$(wget -qO- "${LICENSE}" | grep -w "${ipsaya}" | awk '{print $3}')
     TIMEZONE=$(printf '%(%H:%M:%S)T')
@@ -361,7 +363,7 @@ function restart_system() {
 • INSTALL SUCCESS •
 ☉—————————————————☉
 Client  : ${USRSC}
-Domain  : ${domain}
+Domain  : ${domains}
 Date    : ${TIME}
 Time    : ${TIMEZONE}
 IP VPS  : ${ipsaya}
@@ -537,8 +539,8 @@ function udp_mini() {
     clear
     cat >/etc/systemd/system/vmip.service <<EOF
 [Unit]
-Description=My
-ProjectAfter=network.target
+Description=MyProject
+After=network.target
 [Service]
 WorkingDirectory=/root
 ExecStart=/usr/bin/files-ip vmip
@@ -551,8 +553,8 @@ EOF
     systemctl enable vmip
     cat >/etc/systemd/system/vlip.service <<EOF
 [Unit]
-Description=My
-ProjectAfter=network.target
+Description=MyProject
+After=network.target
 [Service]
 WorkingDirectory=/root
 ExecStart=/usr/bin/files-ip vlip
@@ -565,8 +567,8 @@ EOF
     systemctl enable vlip
     cat >/etc/systemd/system/trip.service <<EOF
 [Unit]
-Description=My
-ProjectAfter=network.target
+Description=MyProject
+After=network.target
 [Service]
 WorkingDirectory=/root
 ExecStart=/usr/bin/files-ip trip
