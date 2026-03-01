@@ -1,0 +1,54 @@
+#!/bin/bash
+
+clear
+CHATID=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 3)
+KEY=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 2)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+
+function send_log() {
+CHATID="$CHATID"
+KEY="$KEY"
+TIME="$TIME"
+URL="$URL"
+TEXT="<blockquote>
+⚠️ <b>MULTILOGIN</b>
+──────────────────
+👤 <b>Username :</b> ${user}
+🚫 <b>Limit IP :</b> ${data}
+──────────────────
+<i>*System automatically killed.</i>
+</blockquote>"
+curl -s --max-time $TIME \
+    --data-urlencode "chat_id=$CHATID" \
+    --data-urlencode "text=$TEXT" \
+    --data-urlencode "parse_mode=html" \
+    --data-urlencode "disable_web_page_preview=true" \
+    "$URL" >/dev/null
+clear
+}
+
+mulog=$(member)
+date=$(date)
+data=( `ls /etc/kyt/limit/ssh/ip`);
+for user in "${data[@]}"
+do
+    iplimit=$(cat /etc/kyt/limit/ssh/ip/$user)
+    cekcek=$(echo -e "$mulog" | grep $user | wc -l);
+
+if [[ $cekcek -gt $iplimit ]]; then
+    userdel -f -r $user
+    nais=3
+    echo -e "$waktu\nRemoved User: $user Login: $cekcek IP Max: $ip IP \n" >> /etc/kyt/log/ssh/ssh.log
+else
+    echo > /dev/null
+fi
+    sleep 30
+done
+
+if [[ $nais -gt 1 ]]; then
+    send_log
+    telegram-send --pre "$(log-ssh)" > /dev/null & 
+else
+    echo > /dev/null
+fi
